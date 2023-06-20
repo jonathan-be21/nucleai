@@ -1,0 +1,36 @@
+services:
+  listener:
+    build:
+      context: ./listener
+    container_name: listener
+    volumes:
+      - type: bind
+        source: /tmp/source_files
+        target: /source_files
+      - type: volume
+        source: dest_files
+        target: /dest_files
+    restart: "always"
+    environment:
+      SOURCE_FOLDER_PATH: /source_files
+      DEST_FOLDER_PATH: /dest_files
+  fastapi:
+    build:
+      context: ./fastapi
+    container_name: fastapi
+    volumes:
+      - type: bind
+        source: /tmp/source_files
+        target: /source_files
+      - type: bind
+        source: /tmp/dest_files
+        target: /dest_files
+    environment:
+      PORT: 8080
+      SOURCE_FOLDER_PATH: /source_files
+      DEST_FOLDER_PATH: /dest_files
+    ports:
+      - '8080:8080'
+    restart: "always"
+volumes:
+  dest_files:
